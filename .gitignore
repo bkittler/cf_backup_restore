@@ -1,7 +1,9 @@
 # Distribution / packaging
 
 env/
+2021-04-01-.+.net-1723/
 ^202.\-..\-..-.+$/
+.DS_Store
 .Python
 build/
 develop-eggs/

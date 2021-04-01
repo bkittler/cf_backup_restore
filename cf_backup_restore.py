@@ -205,7 +205,7 @@ def importdata(cf, zone_dest):
             print("\n**********\n")
             print('-> Zone detected : {} - {}'.format(zone_id, zone_name))
             agree = input("\nAre you sure you want to import into this zone ? (yes or no)\n")
-            if agree== 'yes':
+            if agree == 'yes':
                 print('Import...')
                 for f in os.listdir("./"):
                     if zone_name in f:
@@ -242,7 +242,7 @@ def importdata(cf, zone_dest):
                             datajson['proxied'] = bool("True")
                         else:
                             datajson['proxied'] = bool("")
-                        entriesToRemove = ('id', 'zone_id','zone_name','created_on','modified_on','locked','meta','proxiable')
+                        entriesToRemove = ('id', 'zone_id', 'zone_name', 'created_on', 'modified_on', 'locked', 'meta', 'proxiable')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
                         if datajson['proxied'] == "False":
@@ -263,7 +263,7 @@ def importdata(cf, zone_dest):
                                 print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['name'] + " " + datajson['type'] + " " + datajson['content']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
-                    #PAGERULES
+                    # PAGERULES
                     print('\nPAGERULES :')
                     pagerules_reimport = a + '/pagerules.txt'
                     try:
@@ -319,7 +319,7 @@ def importdata(cf, zone_dest):
                         json_acceptable_string = json_acceptable_string.replace("True", "\"True\"")
                         json_acceptable_string = json_acceptable_string.replace("False", "\"False\"")
                         datajson = json.loads(json_acceptable_string)
-                        entriesToRemove = ('id','paused','modified_on','allowed_modes','scope','created_on')
+                        entriesToRemove = ('id', 'paused', 'modified_on', 'allowed_modes', 'scope', 'created_on')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
                         try:
@@ -329,14 +329,14 @@ def importdata(cf, zone_dest):
                                 sys.stderr.write('api error - more than one error value returned!\n')
                                 for x in e:
                                     sys.stderr.write('api error: %d %s\n' % (x, x))
-                            #print("e = ", e)
+                            # print("e = ", e)
                             if str(e) == "firewallaccessrules.api.duplicate_of_existing":
                                 print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['configuration']['value']))
                             else:
                                 print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['configuration']['value']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
-                    #MONITORS
+                    # MONITORS
                     try:
                         account_id = zones[0]['account']['id']
                     except CloudFlare.exceptions.CloudFlareAPIError as e:
@@ -374,8 +374,9 @@ def importdata(cf, zone_dest):
                         json_acceptable_string = s.replace("'", "\"")
                         json_acceptable_string = json_acceptable_string.replace("True", "\"True\"")
                         json_acceptable_string = json_acceptable_string.replace("False", "\"False\"")
+                        json_acceptable_string = json_acceptable_string.replace("None", "\"None\"")
                         datajson = json.loads(json_acceptable_string)
-                        entriesToRemove = ('created_on','modified_on','id','disabled_at')
+                        entriesToRemove = ('created_on', 'modified_on', 'id', 'disabled_at')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
                         if datajson['follow_redirects'] == "False": datajson['follow_redirects'] = bool("")
@@ -402,7 +403,7 @@ def importdata(cf, zone_dest):
                                     for x in e:
                                         sys.stderr.write('api error: %d %s\n' % (x, x))
                                 if str(e) == "monitors.api.duplicate_of_existing": print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
-                                else:print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description'])+ '\t\t api error: %d %s' % (e, e))
+                                else: print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
                     # POOLS
@@ -442,16 +443,16 @@ def importdata(cf, zone_dest):
                         poollist.append(datajson['id'])
                         poollist.append(datajson['name'])
                         if datajson['check_regions'] == "None": datajson['check_regions'] == "['WNAM']"
-                        entriesToRemove = ('created_on','modified_on','id')
+                        entriesToRemove = ('created_on', 'modified_on', 'id')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
                         if datajson['enabled'] == "False": datajson['enabled'] = bool("")
                         else: datajson['enabled'] = bool("True")
 
-                        for idx,orig in enumerate(datajson['origins']):
+                        for idx, orig in enumerate(datajson['origins']):
                             if orig['enabled'] == "False":
                                 datajson['origins'][idx]["enabled"] = bool("")
-                            else: datajson['origins'][idx]["enabled"]  = bool("True")
+                            else: datajson['origins'][idx]["enabled"] = bool("True")
 
                         exist = 0
                         descr = 0
@@ -460,18 +461,18 @@ def importdata(cf, zone_dest):
                                 if pools[descr]['description'] == datajson['description']:
                                     print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
                                     exist = 1
-                                descr=descr+1
+                                descr = descr + 1
 
                         else:
                             try:
-                                if exist != 1:cf.accounts.load_balancers.pools.post(account_id, data=datajson)
+                                if exist != 1: cf.accounts.load_balancers.pools.post(account_id, data=datajson)
                             except CloudFlare.exceptions.CloudFlareAPIError as e:
                                 if len(e) > 0:
                                     sys.stderr.write('api error - more than one error value returned!\n')
                                     for x in e:
                                         sys.stderr.write('api error: %d %s\n' % (x, x))
                                 if str(e) == "A pool with that name already exists: value not unique": print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
-                                else:print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']) + '\t\t api error: %d %s' % (e, e))
+                                else: print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
                     # LOADBALANCERS
@@ -500,7 +501,7 @@ def importdata(cf, zone_dest):
                         json_acceptable_string = json_acceptable_string.replace("True", "\"True\"")
                         json_acceptable_string = json_acceptable_string.replace("False", "\"False\"")
                         datajson = json.loads(json_acceptable_string)
-                        entriesToRemove = ('created_on','modified_on','id')
+                        entriesToRemove = ('created_on', 'modified_on', 'id')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
                         if datajson['enabled'] == "False": datajson['enabled'] = bool("")
@@ -508,22 +509,22 @@ def importdata(cf, zone_dest):
                         if datajson['proxied'] == "False": datajson['proxied'] = bool("")
                         else: datajson['proxied'] = bool("True")
 
-                        #replace id by name
+                        # replace id by name
                         if datajson['fallback_pool'] != "": datajson['fallback_pool'] = poollist[poollist.index(datajson['fallback_pool']) + 1]
-                        #replace name by new id
+                        # replace name by new id
                         for currentpool in pools:
                             if datajson['fallback_pool'] == currentpool['name']:
                                 datajson['fallback_pool'] = currentpool['id']
 
                         listdefaultpool = datajson['default_pools']
 
-                        #replace id by name
+                        # replace id by name
                         for fpool in datajson['default_pools']:
                             if fpool != "":
                                 datajson['default_pools'][listdefaultpool.index(fpool)] = poollist[poollist.index(fpool)+1]
 
-                        #replace name by new id
-                        for idx,fpool2 in enumerate(datajson['default_pools']):
+                        # replace name by new id
+                        for idx, fpool2 in enumerate(datajson['default_pools']):
                             for currentpool2 in pools:
                                 if fpool2 == currentpool2['name']:
                                     datajson['default_pools'][idx] = currentpool2['id']
@@ -540,7 +541,6 @@ def importdata(cf, zone_dest):
                             else:
                                 print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['name']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
-
 
                 else:
                     print("Abort...")
@@ -585,7 +585,7 @@ def exportdata(cf, zone_source):
 
         # Get all pagerules
         try:
-            pagerules = cf.zones.pagerules.get(zone_id,params={'per_page': 1000})
+            pagerules = cf.zones.pagerules.get(zone_id, params={'per_page': 1000})
         except CloudFlare.exceptions.CloudFlareAPIError as e:
             exit('/PAGE RULES %d %s - api call failed' % (e, e))
         except Exception as e:
@@ -593,7 +593,7 @@ def exportdata(cf, zone_source):
 
         # Get all access rules
         try:
-            access_rules = cf.zones.firewall.access_rules.rules.get(zone_id,params={'per_page': 1000})
+            access_rules = cf.zones.firewall.access_rules.rules.get(zone_id, params={'per_page': 1000})
         except CloudFlare.exceptions.CloudFlareAPIError as e:
             exit('/ACCESS RULES %d %s - api call failed' % (e, e))
         except Exception as e:
@@ -601,7 +601,7 @@ def exportdata(cf, zone_source):
 
         # Get all loadbalancers
         try:
-            load_balancers = cf.zones.load_balancers.get(zone_id,params = {'per_page':1000})
+            load_balancers = cf.zones.load_balancers.get(zone_id, params={'per_page': 1000})
         except CloudFlare.exceptions.CloudFlareAPIError as e:
             exit('/LOAD BALANCER %d %s - api call failed' % (e, e))
         except Exception as e:
@@ -695,7 +695,7 @@ def exportdata(cf, zone_source):
             print("Searching for Pagerules...\n")
             file_name = "pagerules.txt"
             file_name_on_rep = os. path. join(repertoire, file_name)
-            fichier= open(file_name_on_rep,"w")
+            fichier = open(file_name_on_rep, "w")
             fichier.close()
             progress_bar = Bar('Processing', max=len(pagerules), suffix='%(percent)d%%')
             for pagerule in pagerules:
@@ -791,7 +791,7 @@ def exportdata(cf, zone_source):
             print("Searching for Pools...\n")
             file_name = "pools.txt"
             file_name_on_rep = os. path. join(repertoire, file_name)
-            fichier = open(file_name_on_rep,"w")
+            fichier = open(file_name_on_rep, "w")
             fichier.close()
             progress_bar = Bar('Processing', max=len(pools), suffix='%(percent)d%%')
             for pool in pools:
