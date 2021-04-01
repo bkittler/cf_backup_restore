@@ -294,9 +294,9 @@ def importdata(cf, zone_dest):
                                 for x in e:
                                     sys.stderr.write('api error: %d %s\n' % (x, x))
                             if str(e) == "Page Rule validation failed: See messages for details.":
-                                print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']))
+                                print('-> {:<100} -> !! not imported !! -> Already exists or disabled'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']))
                             else:
-                                print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']) + '\t\t api error: %d %s' % (e, e))
+                                print('-> {:<100} -> !! not imported !! ->'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
                     # FIREWALLRULES
@@ -387,24 +387,23 @@ def importdata(cf, zone_dest):
                                 datajson.pop('header', None)
                         exist = 0
                         descr = 0
+                        #import pdb; pdb.set_trace()
                         if len(listmonitors) != 0:
                             while descr < len(listmonitors):
                                 if listmonitors[descr]['description'] == datajson['description']:
                                     print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
                                     exist = 1
                                 descr=descr+1
-
-                        else:
-                            try:
-                                if exist != 1:
-                                    cf.accounts.load_balancers.monitors.post(account_id, data=datajson)
-                            except CloudFlare.exceptions.CloudFlareAPIError as e:
-                                if len(e) > 0:
-                                    sys.stderr.write('api error - more than one error value returned!\n')
-                                    for x in e:
-                                        sys.stderr.write('api error: %d %s\n' % (x, x))
-                                if str(e) == "monitors.api.duplicate_of_existing": print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
-                                else: print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']) + '\t\t api error: %d %s' % (e, e))
+                        try:
+                            if exist != 1:
+                                cf.accounts.load_balancers.monitors.post(account_id, data=datajson)
+                        except CloudFlare.exceptions.CloudFlareAPIError as e:
+                            if len(e) > 0:
+                                sys.stderr.write('api error - more than one error value returned!\n')
+                                for x in e:
+                                    sys.stderr.write('api error: %d %s\n' % (x, x))
+                            if str(e) == "monitors.api.duplicate_of_existing": print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']))
+                            else: print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['description']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
 
                     # POOLS
@@ -443,17 +442,32 @@ def importdata(cf, zone_dest):
                         datajson = json.loads(json_acceptable_string)
                         poollist.append(datajson['id'])
                         poollist.append(datajson['name'])
-                        if datajson['check_regions'] == "None": datajson['check_regions'] == "['WNAM']"
-                        entriesToRemove = ('created_on', 'modified_on', 'id')
+                        if datajson['check_regions'] == "None":
+                            datajson.pop('check_regions', None)
+                        entriesToRemove=('created_on', 'modified_on', 'id')
                         for k in entriesToRemove:
                             datajson.pop(k, None)
-                        if datajson['enabled'] == "False": datajson['enabled'] = bool("")
+                        if datajson['enabled'] == "False":
+                            datajson['enabled']=bool("")
                         else: datajson['enabled'] = bool("True")
-
+                        try: 
+                            if datajson['healthy'] == "False":
+                                datajson['healthy']=bool("")
+                            else: 
+                                datajson['healthy'] = bool("True")
+                        except:
+                            pass
                         for idx, orig in enumerate(datajson['origins']):
                             if orig['enabled'] == "False":
                                 datajson['origins'][idx]["enabled"] = bool("")
                             else: datajson['origins'][idx]["enabled"] = bool("True")
+                            try:
+                                if datajson['origins'][idx]['healthy'] == "False":
+                                    datajson['origins'][idx]['healthy']=bool("")
+                                else: 
+                                    datajson['origins'][idx]['healthy']=bool("True")
+                            except:
+                                pass
 
                         exist = 0
                         descr = 0
