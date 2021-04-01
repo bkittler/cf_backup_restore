@@ -383,7 +383,9 @@ def importdata(cf, zone_dest):
                         else: datajson['follow_redirects'] = bool("True")
                         if datajson['allow_insecure'] == "False": datajson['allow_insecure'] = bool("")
                         else: datajson['allow_insecure'] = bool("True")
-
+                        #import pdb; pdb.set_trace()
+                        if datajson['header'] == "None":
+                                datajson.pop('header', None)
                         exist = 0
                         descr = 0
                         if len(listmonitors) != 0:
