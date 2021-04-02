@@ -693,7 +693,7 @@ def exportdata(cf, zone_source):
                 r_id = dns_record['id']
                 progress_bar.next()
                 # write the dns file
-                file_name = "dns.txt"
+                file_name = "dns_reimport.txt"
                 file_name_on_rep = os. path. join(repertoire, file_name)
                 with open(file_name_on_rep, 'a') as file:
                     file.write(r_name + '\t' + r_type + '\t' + r_value + '\n')
