@@ -294,7 +294,7 @@ def importdata(cf, zone_dest):
                                 for x in e:
                                     sys.stderr.write('api error: %d %s\n' % (x, x))
                             if str(e) == "Page Rule validation failed: See messages for details.":
-                                print('-> {:<100} -> !! not imported !! -> Already exists or disabled'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']))
+                                print('-> {:<100} -> !! not imported !! -> Already exists'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']))
                             else:
                                 print('-> {:<100} -> !! not imported !! ->'.format(datajson['targets'][0]['constraint']['value'] + " " + datajson['actions'][0]['id']) + '\t\t api error: %d %s' % (e, e))
                     print('Done...')
@@ -387,7 +387,7 @@ def importdata(cf, zone_dest):
                                 datajson.pop('header', None)
                         exist = 0
                         descr = 0
-                        #import pdb; pdb.set_trace()
+                        
                         if len(listmonitors) != 0:
                             while descr < len(listmonitors):
                                 if listmonitors[descr]['description'] == datajson['description']:
@@ -696,7 +696,8 @@ def exportdata(cf, zone_source):
                 file_name = "dns.txt"
                 file_name_on_rep = os. path. join(repertoire, file_name)
                 with open(file_name_on_rep, 'a') as file:
-                    file.write(r_id + '\t' + r_name + '\t' + r_type + '\t' + r_value + '\n')
+                    file.write(r_name + '\t' + r_type + '\t' + r_value + '\n')
+                    #file.write(r_id + '\t' + r_name + '\t' + r_type + '\t' + r_value + '\n')
 
                 # write DNS json file to mermit diff between export or manual import
                 file_name2 = "dns-json.txt"
@@ -713,6 +714,10 @@ def exportdata(cf, zone_source):
             fichier = open(file_name_on_rep, "w")
             fichier.close()
             progress_bar = Bar('Processing', max=len(pagerules), suffix='%(percent)d%%')
+
+            # sort pagesrules by priority
+            pagerules=sorted(pagerules, key = lambda i: i['priority'])
+
             for pagerule in pagerules:
                 pagerule_json = pagerule
                 progress_bar.next()
