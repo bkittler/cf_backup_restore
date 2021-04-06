@@ -12,7 +12,7 @@ Please first clone repository :
 
     cd ./cf_backup_restore
 
-And install Python and requierements :
+And install Python and requirements :
 
     pip install -r requirements.txt
 
@@ -90,7 +90,7 @@ Remember to put the read authorization to your token id (for export) and read / 
 
 please install python dependancies before run tool :
 
-    pip install -r requierements.txt 
+    pip install -r requirements.txt 
 
 ## Further information and help
 
