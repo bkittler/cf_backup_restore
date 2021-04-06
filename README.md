@@ -1,5 +1,4 @@
 ## cf_backup_restore - Cloudflare - tool for backup / restore data on Cloudflare account / zones
-
 ***
 
 cf_backup_restore is python tool to export and/or import data from Cloudflare account/zones 
@@ -9,21 +8,24 @@ cf_backup_restore is python tool to export and/or import data from Cloudflare ac
 
 Please first clone repository :
 
-$ git clone https://github.com/bkittler/cf_backup_restore
-$ cd ./cf_backup_restore
+    git clone https://github.com/bkittler/cf_backup_restore
+
+    cd ./cf_backup_restore
 
 And install Python and install requierements :
 
-$ pip install -r requirements.txt
+    pip install -r requirements.txt
 
 
 ## Usage
 
 Export synthax: 
-$ cf_backup_restore.py -t <token_id> -e <export_zone_id>
+
+    cf_backup_restore.py -t <token_id> -e <export_zone_id>
 
 Import synthax: 
-$ cf_backup_restore.py -t <token_id> -i <import_zone_id>
+
+    cf_backup_restore.py -t <token_id> -i <import_zone_id>
 
 <token_id> is token for authentication
 
@@ -33,7 +35,8 @@ $ cf_backup_restore.py -t <token_id> -i <import_zone_id>
 
 
 To see Help: 
-$ cf_backup_restore.py -h
+
+    cf_backup_restore.py -h
 
 
 ## Output files
@@ -43,12 +46,15 @@ In this directory two files will be created for each of the exported data types
 
 
 dns-json.txt   -> raw json export for DNS entry
+
 dns_reimport.txt   -> export cleaned to allow diffs between zones
 
 firewallaccessrules.txt   -> raw json export for firewall access rules
+
 firewallaccessrules_reimport.txt   -> export cleaned to allow diffs between zones
 
 pagerules.txt   -> raw json export for Page rules
+
 pagerules_reimport.txt   -> export cleaned to allow diffs between zones
 
 pools.txt   -> raw json export for pools
@@ -62,11 +68,11 @@ load_balancers.txt   -> raw json export for loadbalancer
 
 To make diff between zone export, you can make :
 
-$ diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt)
+    diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt)
 
 or for diff between two backup :
 
-$ diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt)
+    diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt)
 
 
 ## Warning :
