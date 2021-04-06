@@ -75,7 +75,7 @@ or for diff between two backup :
     diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt)
 
 
-## Warning :
+## Warning
 
 - Type of data : 
 
@@ -86,7 +86,7 @@ For moment, only DNS, page rules, firewall rule, pools, monitors and loadbalance
 Remember to put the read authorization to your token id (for export) and read / write for the use of import
 
 
-## Dependencies :
+## Dependencies
 
 please install python dependancies before run tool :
 
