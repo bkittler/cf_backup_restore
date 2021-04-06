@@ -22,14 +22,12 @@ __credits__ = ["Benjamin Kittler"]
 __license__ = "MIT"
 __version__ = "0.1"
 __maintainer__ = "Benjamin Kittler"
-__email__ = "kittler @T gmail.com"
+__email__ = "kittler @T. gmail. com"
 __status__ = "integration"
 
 """
-todo
+todo :
 make function for each type of import or export
-dont forget .gitignore
-dont forget requierement.txt
 prefer os.path.dirname(__file__) for ./ = where
 check if token id is active
 
