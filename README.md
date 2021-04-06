@@ -12,7 +12,7 @@ Please first clone repository :
 
     cd ./cf_backup_restore
 
-And install Python and install requierements :
+And install Python and requierements :
 
     pip install -r requirements.txt
 
