@@ -1,4 +1,4 @@
-#cf_backup_restore - Cloudflare - tool for backup / restore data on Cloudflare account / zones
+##cf_backup_restore - Cloudflare - tool for backup / restore data on Cloudflare account / zones
 
 cf_backup_restore is python tool to export and/or import data from Cloudflare account/zones 
 
@@ -17,6 +17,7 @@ pip install -r requirements.txt
 ## Usage
 
 Export synthax: cf_backup_restore.py -t <token_id> -e <export_zone_id>
+
 Import synthax: cf_backup_restore.py -t <token_id> -i <import_zone_id>
 
 <token_id> is token for authentication
