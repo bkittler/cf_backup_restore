@@ -68,11 +68,11 @@ In this directory two files will be created for each of the exported data types
 
 To make diff between zone export, you can make :
 
-    diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*_reimport.txt)
+    diff -u <(sort 2021-XX-XX-xxx.com-xxxx/*_reimport.txt) <(sort 2021-XX-XX-xxx.com-xxxx/*_reimport.txt)
 
 or for diff between two backup :
 
-    diff -u <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt) <(sort -u 2021-XX-XX-xxx.com-xxxx/*.txt)
+    diff -u <(sort 2021-XX-XX-xxx.com-xxxx/*.txt) <(sort 2021-XX-XX-xxx.com-xxxx/*.txt)
 
 
 ## Warning
